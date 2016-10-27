@@ -25,26 +25,25 @@ public class FibonacciWalk
       System.out.printf("%s: %d + %d = %d", B.NAME, B.y, B.x, B.z);
     }
   }
+}
 
+class Worker extends Thread
+{
+  final String NAME; //Name of thread
+  long step = 0; //Steps since start.
+  long z; // fib(step)
+  long y = 1; // fib(step-1)
+  long x = 1; // fib(step-2)
 
-  private class Worker extends Thread
+  Worker(String name)
   {
-    private final String NAME; //Name of thread
-    private long step = 0; //Steps since start.
-    private long z; // fib(step)
-    private long y = 1; // fib(step-1)
-    private long x = 1; // fib(step-2)
+    NAME = name;
+  }
 
-    Worker(String name)
-    {
-      NAME = name;
-    }
-
-    @Override
-    public void run()
-    {
-      step++;
-      z = y + x;
-    }
+  @Override
+  public void run()
+  {
+    step++;
+    z = y + x;
   }
 }
