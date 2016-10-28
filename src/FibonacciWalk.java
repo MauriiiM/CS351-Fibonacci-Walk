@@ -7,8 +7,8 @@ public class FibonacciWalk
   {
     Worker A = new Worker("A");
     A.start();
-//    Worker B = new Worker("B");
-//    B.start();
+    Worker B = new Worker("B");
+    B.start();
 
 
     for (int i = 0; i < 10; i++)
@@ -16,20 +16,27 @@ public class FibonacciWalk
       try
       {
         Thread.sleep(200);
-        System.out.println("Sleeping\n");
+        System.out.println("Sleeping");
       }
       catch (InterruptedException e)
       {
         System.err.println("Sleep interrupted");
       }
-
-      synchronized (A)
-      {
-        System.out.printf("%s %,d: %,d + %,d = %,d\n", A.NAME, A.step, A.y, A.x, A.z);
-      }
-//      System.out.printf("%s %,d: %,d + %,d = %,d\n", B.NAME, B.step, B.y, B.x, B.z);
+      System.out.printf("%s %,d: %,d + %,d = %,d\n", A.NAME, A.step, A.y, A.x, A.z);
+      System.out.printf("%s %,d: %,d + %,d = %,d\n\n", B.NAME, B.step, B.y, B.x, B.z);
     }
+
+//    while (A.isAlive() || B.isAlive())
+//    {
     A.closeThread();
+    B.closeThread();
+//    }
+    if (!A.isAlive() && !B.isAlive())
+    {
+      System.out.println("Program Exit");
+      System.exit(0);
+    }
+    else System.out.printf("NOPE");
   }
 }
 
@@ -40,7 +47,7 @@ class Worker extends Thread
   long z; // fib(step)
   long y = 1; // fib(step-1)
   long x = 1; // fib(step-2)
-  boolean running = true;
+  private boolean running = true;
 
   Worker(String name)
   {
@@ -53,6 +60,7 @@ class Worker extends Thread
     while (running)
     {
       step++;
+      z = y + x;
       if (z == 7_540_113_804_746_346_429L)
       {
         x = 1;
@@ -63,7 +71,6 @@ class Worker extends Thread
         x = y;
         y = z;
       }
-      z = y + x;
 //      System.out.println("jjj");
     }
     System.out.println(NAME + " has exited");
