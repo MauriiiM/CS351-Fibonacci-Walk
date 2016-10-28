@@ -15,17 +15,21 @@ public class FibonacciWalk
     {
       try
       {
-        Thread.sleep(2000);
-        System.out.println("Sleeping");
+        Thread.sleep(200);
+        System.out.println("Sleeping\n");
       }
       catch (InterruptedException e)
       {
         System.err.println("Sleep interrupted");
       }
 
-      System.out.printf("%s %,d: %,d + %,d = %,d\n", A.NAME, A.step, A.y, A.x, A.z);
+      synchronized (A)
+      {
+        System.out.printf("%s %,d: %,d + %,d = %,d\n", A.NAME, A.step, A.y, A.x, A.z);
+      }
 //      System.out.printf("%s %,d: %,d + %,d = %,d\n", B.NAME, B.step, B.y, B.x, B.z);
     }
+    A.closeThread();
   }
 }
 
@@ -36,6 +40,7 @@ class Worker extends Thread
   long z; // fib(step)
   long y = 1; // fib(step-1)
   long x = 1; // fib(step-2)
+  boolean running = true;
 
   Worker(String name)
   {
@@ -45,10 +50,10 @@ class Worker extends Thread
   @Override
   public void run()
   {
-    while (true)
+    while (running)
     {
       step++;
-      if (z == Long.MAX_VALUE)
+      if (z == 7_540_113_804_746_346_429L)
       {
         x = 1;
         y = 1;
@@ -59,6 +64,13 @@ class Worker extends Thread
         y = z;
       }
       z = y + x;
+//      System.out.println("jjj");
     }
+    System.out.println(NAME + " has exited");
+  }
+
+  void closeThread()
+  {
+    running = false;
   }
 }
