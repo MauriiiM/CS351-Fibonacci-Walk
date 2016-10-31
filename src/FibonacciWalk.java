@@ -5,6 +5,7 @@ public class FibonacciWalk
 {
   public static void main(String args[])
   {
+    System.out.println("Program started");
     //create threads
     Worker A = new Worker("A");
     A.start();
@@ -49,7 +50,7 @@ class Worker extends Thread
 {
   final String NAME; //Name of thread
   long step = 0; //Steps since start.
-  long z; // fib(step)
+  long z = 2; // fib(step)
   long y = 1; // fib(step-1)
   long x = 1; // fib(step-2)
   private volatile boolean running = true;
