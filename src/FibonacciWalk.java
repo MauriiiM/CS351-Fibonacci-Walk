@@ -5,38 +5,39 @@ public class FibonacciWalk
 {
   public static void main(String args[])
   {
+    //create threads
     Worker A = new Worker("A");
     A.start();
     Worker B = new Worker("B");
     B.start();
 
-
-    for (int i = 0; i < 10; i++)
+    //run threads
+    try
     {
-      try
+      for (int i = 0; i < 10; i++)
       {
+//        System.out.println("Sleeping");
         Thread.sleep(200);
-        System.out.println("Sleeping");
+        System.out.printf("%s(%,d): %,d + %,d = %,d\n", A.NAME, A.step, A.x, A.y, A.z);
+        System.out.printf("%s(%,d): %,d + %,d = %,d\n\n", B.NAME, B.step, B.x, B.y, B.z);
       }
-      catch (InterruptedException e)
-      {
-        System.err.println("Sleep interrupted");
-      }
-      System.out.printf("%s %,d: %,d + %,d = %,d\n", A.NAME, A.step, A.y, A.x, A.z);
-      System.out.printf("%s %,d: %,d + %,d = %,d\n\n", B.NAME, B.step, B.y, B.x, B.z);
+
+    }
+    catch (InterruptedException e)
+    {
+      System.err.println("Sleep interrupted");
     }
 
-//    while (A.isAlive() || B.isAlive())
-//    {
+    //close threads
     A.closeThread();
     B.closeThread();
-//    }
+    while(A.isAlive() || B.isAlive());
     if (!A.isAlive() && !B.isAlive())
     {
       System.out.println("Program Exit");
       System.exit(0);
     }
-    else System.out.printf("NOPE");
+
   }
 }
 
@@ -47,11 +48,13 @@ class Worker extends Thread
   long z; // fib(step)
   long y = 1; // fib(step-1)
   long x = 1; // fib(step-2)
-  private boolean running = true;
+  private volatile boolean running = true;
+
 
   Worker(String name)
   {
     NAME = name;
+
   }
 
   @Override
@@ -59,19 +62,7 @@ class Worker extends Thread
   {
     while (running)
     {
-      step++;
-      z = y + x;
-      if (z == 7_540_113_804_746_346_429L)
-      {
-        x = 1;
-        y = 1;
-      }
-      else
-      {
-        x = y;
-        y = z;
-      }
-//      System.out.println("jjj");
+      fibonacciSeq();
     }
     System.out.println(NAME + " has exited");
   }
@@ -79,5 +70,21 @@ class Worker extends Thread
   void closeThread()
   {
     running = false;
+  }
+
+  private synchronized void fibonacciSeq()
+  {
+    step++;
+    z = y + x;
+    if (z == 7_540_113_804_746_346_429L)
+    {
+      x = 1;
+      y = 1;
+    }
+    else
+    {
+      x = y;
+      y = z;
+    }
   }
 }
