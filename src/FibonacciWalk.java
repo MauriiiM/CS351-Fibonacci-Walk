@@ -37,11 +37,13 @@ public class FibonacciWalk
     //close threads
     A.closeThread();
     B.closeThread();
-    while(A.isAlive() || B.isAlive());
-    if (!A.isAlive() && !B.isAlive())
+    while(true)
     {
-      System.out.println("Program Exit");
-      System.exit(0);
+      if (!A.isAlive() && !B.isAlive())
+      {
+        System.out.println("Program Exit");
+        System.exit(0);
+      }
     }
   }
 }
