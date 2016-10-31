@@ -16,10 +16,15 @@ public class FibonacciWalk
     {
       for (int i = 0; i < 10; i++)
       {
-//        System.out.println("Sleeping");
-        Thread.sleep(200);
-        System.out.printf("%s(%,d): %,d + %,d = %,d\n", A.NAME, A.step, A.x, A.y, A.z);
-        System.out.printf("%s(%,d): %,d + %,d = %,d\n\n", B.NAME, B.step, B.x, B.y, B.z);
+        Thread.sleep(2000);
+        synchronized (A)
+        {
+          System.out.printf("%s(%,d): %,d + %,d = %,d\n", A.NAME, A.step, A.x, A.y, A.z);
+        }
+        synchronized (B)
+        {
+          System.out.printf("%s(%,d): %,d + %,d = %,d\n\n", B.NAME, B.step, B.x, B.y, B.z);
+        }
       }
 
     }
@@ -37,7 +42,6 @@ public class FibonacciWalk
       System.out.println("Program Exit");
       System.exit(0);
     }
-
   }
 }
 
@@ -75,7 +79,6 @@ class Worker extends Thread
   private synchronized void fibonacciSeq()
   {
     step++;
-    z = y + x;
     if (z == 7_540_113_804_746_346_429L)
     {
       x = 1;
@@ -86,5 +89,6 @@ class Worker extends Thread
       x = y;
       y = z;
     }
+    z = y + x;
   }
 }
